@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="./styles/gfn-ds.css">
+  <style>
+    body { background: var(--color-bg); }
+    .fr-shell { max-width: 1040px; margin: 0 auto; padding: 0 24px; }
+    .fr-grid { display: grid; grid-template-columns: minmax(0,1fr) 300px; gap: 24px; align-items: start; }
+    @media (max-width: 860px) { .fr-grid { grid-template-columns: 1fr; } }
+    .fr-stage { touch-action: none; user-select: none; }
+    .fr-stage img { -webkit-user-drag: none; user-select: none; pointer-events: none; }
+    .fr-val { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 13px; }
+  </style>
+</helmet>
+
+<div style="{{ rootStyle }}">
+  <nav class="nav fr-shell" style="padding-top:16px; padding-bottom:16px;">
+    <div style="display:flex; align-items:center; gap:10px; margin-right:auto;">
+      <img src="./assets/gfn-logo.jpg" alt="GFN logo" style="width:34px; height:34px; border-radius:var(--radius-sm); object-fit:cover;">
+      <span class="nav-brand">GFN <span style="color:var(--color-accent);">/</span> Photo Framing</span>
+    </div>
+    <a href="./index.html" class="btn btn-secondary">View the site</a>
+  </nav>
+
+  <section class="fr-shell" style="padding-top:24px; padding-bottom:64px;">
+    <h2 style="margin:0 0 4px;">Frame a photo</h2>
+    <p class="text-muted" style="font-size:13px; margin:0 0 24px; max-width:70ch; text-wrap:pretty;">Drag the photo to move it, scroll or use the slider to zoom. When it looks right, copy the four numbers into the matching photo's fields in the content editor.</p>
+
+    <div class="fr-grid">
+      <div>
+        <div class="seg" style="margin-bottom:14px; flex-wrap:wrap;">
+          <sc-for list="{{ presets }}" as="p" hint-placeholder-count="4">
+            <label class="seg-opt">
+              <input type="radio" name="preset" style="position:absolute; opacity:0; pointer-events:none;" checked="{{ p.checked }}" onChange="{{ p.pick }}">
+              <span>{{ p.label }}</span>
+            </label>
+          </sc-for>
+        </div>
+
+        <div class="fr-stage" onPointerDown="{{ onPointerDown }}" onWheel="{{ onWheel }}" onDoubleClick="{{ reset }}" style="position:relative; width:100%; aspect-ratio:{{ aspect }}; overflow:hidden; border-radius:var(--radius-md); border:1px solid var(--color-divider); background:var(--color-neutral-900); cursor:{{ cursor }};">
+          <sc-if value="{{ hasImage }}" hint-placeholder-val="{{ false }}">
+            {{ stageImg }}
+          </sc-if>
+          <sc-if value="{{ noImage }}" hint-placeholder-val="{{ true }}">
+            <div style="position:absolute; inset:0; display:flex; align-items:center; justify-content:center; text-align:center; padding:24px;">
+              <span class="text-muted" style="font-size:13px;">Drop an image file here, or paste its path below</span>
+            </div>
+          </sc-if>
+        </div>
+        <p class="text-muted" style="font-size:12px; margin:8px 0 0;">{{ frameNote }}</p>
+
+        <div style="display:flex; align-items:center; gap:14px; margin-top:16px; flex-wrap:wrap;">
+          <div class="field" style="flex:1; min-width:220px;">
+            <label>Zoom</label>
+            <input type="range" min="1" max="3" step="0.01" value="{{ z }}" onInput="{{ onZoom }}" style="width:100%; accent-color:var(--color-accent);">
+          </div>
+          <button class="btn btn-secondary" onClick="{{ reset }}">Reset framing</button>
+        </div>
+
+        <div class="field" style="margin-top:18px;">
+          <label>Image file</label>
+          <div style="display:flex; gap:10px; flex-wrap:wrap;">
+            <input type="file" accept="image/*" onChange="{{ onFile }}" class="input" style="flex:1; min-width:220px; padding:7px 10px;">
+            <input type="text" class="input" placeholder="or a path already uploaded, e.g. assets/uploads/dallas.jpg" value="{{ pathValue }}" onInput="{{ onPath }}" style="flex:2; min-width:260px;">
+          </div>
+        </div>
+      </div>
+
+      <div class="card elev-sm" style="padding:20px;">
+        <span class="card-kicker">Copy into the editor</span>
+        <h3 class="card-title" style="font-size:17px; margin-top:4px;">{{ presetLabel }}</h3>
+
+        <div style="display:flex; flex-direction:column; gap:12px; margin:14px 0 4px;">
+          <sc-for list="{{ outputs }}" as="o" hint-placeholder-count="4">
+            <div style="display:flex; align-items:center; justify-content:space-between; gap:10px; padding-bottom:10px; border-bottom:1px solid var(--color-divider);">
+              <div>
+                <div class="text-muted" style="font-size:11px; text-transform:uppercase; letter-spacing:0.06em;">{{ o.label }}</div>
+                <div class="fr-val" style="margin-top:3px; color:var(--color-accent);">{{ o.value }}</div>
+              </div>
+              <button class="btn btn-ghost" onClick="{{ o.copy }}" style="font-size:12px;">{{ o.copyLabel }}</button>
+            </div>
+          </sc-for>
+        </div>
+
+        <button class="btn btn-primary btn-block" onClick="{{ copyAll }}">{{ copyAllLabel }}</button>
+        <p class="text-muted" style="font-size:12px; margin:14px 0 0; text-wrap:pretty;">Photo framing stays <span class="fr-val">center</span> when you use the nudge numbers — the two work together, so leave it alone unless you are framing by hand.</p>
+      </div>
+    </div>
+  </section>
+
+  <footer style="border-top:1px solid var(--color-divider); padding:24px 0;">
+    <div class="fr-shell">
+      <p class="text-muted" style="font-size:12px; margin:0;">Internal tool · GFN Game Day. Nothing here is saved or published — it only works out the numbers.</p>
+    </div>
+  </footer>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{}">
+class Component extends DCLogic {
+  PRESETS = [
+    { key: 'hub', label: 'Travel card', aspect: '373 / 150', note: 'Travel guide card photo — about 2.5:1. Upload around 1200 × 480.' },
+    { key: 'city', label: 'City photo', aspect: '892 / 190', note: 'Game plan city photo — about 4.7:1. Upload around 2400 × 920.' },
+    { key: 'shop', label: 'Shop product', aspect: '1 / 1', note: 'Fan shop product photo — square. Upload around 800 × 800.' },
+    { key: 'masthead', label: 'Masthead', aspect: '2400 / 900', note: 'The hero masthead is never cropped on desktop — framing only matters if you are checking the square phone version.' },
+  ];
+
+  state = { preset: 'hub', src: '', pathValue: '', x: 0, y: 0, z: 1, dragging: false, copied: '' };
+
+  componentDidMount() {
+    const el = this.el && this.el.querySelector ? this.el : document;
+    this._onDrop = (e) => {
+      const f = e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0];
+      if (!f || !/^image\//.test(f.type)) return;
+      e.preventDefault();
+      this.loadFile(f);
+    };
+    this._prevent = (e) => { if (e.dataTransfer) e.preventDefault(); };
+    document.addEventListener('dragover', this._prevent);
+    document.addEventListener('drop', this._onDrop);
+  }
+  componentWillUnmount() {
+    document.removeEventListener('dragover', this._prevent);
+    document.removeEventListener('drop', this._onDrop);
+    if (this._url) URL.revokeObjectURL(this._url);
+  }
+
+  loadFile(file) {
+    if (this._url) URL.revokeObjectURL(this._url);
+    this._url = URL.createObjectURL(file);
+    this.setState({ src: this._url, pathValue: file.name, x: 0, y: 0, z: 1 });
+  }
+
+  onFile = (e) => { const f = e.target.files && e.target.files[0]; if (f) this.loadFile(f); };
+  onPath = (e) => {
+    const v = e.target.value;
+    this.setState({ pathValue: v, src: v.trim() });
+  };
+  onZoom = (e) => this.setState({ z: parseFloat(e.target.value) || 1 });
+  reset = () => this.setState({ x: 0, y: 0, z: 1 });
+  pickPreset = (key) => this.setState({ preset: key, x: 0, y: 0, z: 1 });
+
+  onWheel = (e) => {
+    if (!this.state.src) return;
+    e.preventDefault();
+    const z = Math.min(3, Math.max(1, this.state.z * (e.deltaY < 0 ? 1.06 : 1 / 1.06)));
+    this.setState({ z: Math.round(z * 100) / 100 });
+  };
+
+  // Pan in percent of the frame's own box, which is what the site's
+  // transform:translate(x%, y%) reads — so the numbers stay correct at any
+  // rendered width.
+  onPointerDown = (e) => {
+    if (!this.state.src) return;
+    // React nulls event.currentTarget once this handler returns, so the deferred
+    // move/up closures must hold their own reference.
+    const el = e.currentTarget;
+    const pid = e.pointerId;
+    const box = el.getBoundingClientRect();
+    const start = { px: e.clientX, py: e.clientY, x: this.state.x, y: this.state.y };
+    try { el.setPointerCapture(pid); } catch (_) {}
+    this.setState({ dragging: true });
+    const move = (ev) => {
+      const dx = ((ev.clientX - start.px) / box.width) * 100;
+      const dy = ((ev.clientY - start.py) / box.height) * 100;
+      this.setState({
+        x: Math.round((start.x + dx) * 10) / 10,
+        y: Math.round((start.y + dy) * 10) / 10,
+      });
+    };
+    const up = () => {
+      el.removeEventListener('pointermove', move);
+      el.removeEventListener('pointerup', up);
+      el.removeEventListener('pointercancel', up);
+      try { el.releasePointerCapture(pid); } catch (_) {}
+      this.setState({ dragging: false });
+    };
+    el.addEventListener('pointermove', move);
+    el.addEventListener('pointerup', up);
+    el.addEventListener('pointercancel', up);
+  };
+
+  copy(key, text) {
+    const done = () => {
+      this.setState({ copied: key });
+      clearTimeout(this._t);
+      this._t = setTimeout(() => this.setState({ copied: '' }), 1400);
+    };
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(done, done);
+    } else done();
+  }
+
+  // Built here, not in the template: a {{ }} hole in a src attribute is fetched
+  // as literal text at parse time, before renderVals has ever run.
+  stageImg(s) {
+    if (!s.src) return null;
+    return React.createElement('img', {
+      src: s.src,
+      alt: '',
+      style: {
+        width: '100%', height: '100%', objectFit: 'cover', display: 'block',
+        transform: 'translate(' + s.x + '%, ' + s.y + '%) scale(' + s.z + ')',
+      },
+    });
+  }
+
+  renderVals() {
+    const s = this.state;
+    const preset = this.PRESETS.find((p) => p.key === s.preset) || this.PRESETS[0];
+    const vals = [
+      { key: 'focus', label: 'Photo framing', value: 'center' },
+      { key: 'zoom', label: 'Photo zoom', value: String(s.z) },
+      { key: 'x', label: 'Nudge left / right (%)', value: String(s.x) },
+      { key: 'y', label: 'Nudge up / down (%)', value: String(s.y) },
+    ];
+    return {
+      rootStyle: { background: 'var(--color-bg)', color: 'var(--color-text)', minHeight: '100vh' },
+      presets: this.PRESETS.map((p) => ({
+        label: p.label, checked: p.key === s.preset, pick: () => this.pickPreset(p.key),
+      })),
+      presetLabel: preset.label, aspect: preset.aspect, frameNote: preset.note,
+      stageImg: this.stageImg(s), hasImage: !!s.src, noImage: !s.src, pathValue: s.pathValue,
+      x: s.x, y: s.y, z: s.z,
+      cursor: s.src ? (s.dragging ? 'grabbing' : 'grab') : 'default',
+      outputs: vals.map((v) => ({
+        ...v,
+        copyLabel: s.copied === v.key ? 'Copied' : 'Copy',
+        copy: () => this.copy(v.key, v.value),
+      })),
+      copyAllLabel: s.copied === 'all' ? 'Copied all four' : 'Copy all four values',
+      copyAll: () => this.copy('all', vals.map((v) => v.label + ': ' + v.value).join('\n')),
+      reset: this.reset, onFile: this.onFile, onPath: this.onPath, onZoom: this.onZoom,
+      onWheel: this.onWheel, onPointerDown: this.onPointerDown,
+    };
+  }
+}
+
+</script>
+</body>
+</html>

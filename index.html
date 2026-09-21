@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="./styles/gfn-ds.css">
+  <style>
+    body { background: var(--color-bg); }
+    .gfn-shell { max-width: 1240px; margin: 0 auto; padding: 0 32px; }
+    .gfn-social a { display: inline-flex; align-items: center; justify-content: center; width: 30px; height: 30px; border-radius: var(--radius-md); color: var(--color-text); opacity: 0.75; }
+    .gfn-social a:hover { opacity: 1; color: var(--color-accent); background: color-mix(in srgb, var(--color-accent) 10%, transparent); }
+    .gfn-hub-card:hover { box-shadow: var(--shadow-md); }
+    .gfn-shop-card:hover { box-shadow: var(--shadow-md); }
+    .gfn-nav-links a, .gfn-account > * { white-space: nowrap; }
+    @media (max-width: 1040px) {
+      .gfn-nav-links { display: none !important; }
+    }
+    @media (max-width: 900px) {
+      .gfn-hero-grid { grid-template-columns: 1fr !important; }
+      .gfn-hub-grid { grid-template-columns: 1fr !important; }
+      .gfn-shop-grid { grid-template-columns: repeat(2,1fr) !important; }
+      .gfn-hero-copy { max-width: 46% !important; }
+    }
+    .gfn-masthead { display: block; }
+    .gfn-masthead-mobile { display: none; }
+    @media (max-width: 600px) {
+      .gfn-masthead { display: none !important; }
+      .gfn-masthead-mobile { display: block !important; }
+      .gfn-hero-overlay { position: static !important; }
+      .gfn-hero-copy { max-width: 100% !important; padding: 20px 0 28px !important; }
+      .gfn-hero-copy h1 { font-size: 30px !important; }
+      .gfn-hero-copy p { font-size: 15px !important; }
+      .gfn-hero-copy .btn { font-size: 14px !important; padding: 11px 20px !important; }
+      .gfn-schedule-grid { grid-template-columns: 1fr !important; }
+      .gfn-trips-layout { display: flex !important; flex-direction: column !important; }
+      .gfn-schedule-rail { display: contents !important; }
+      .gfn-trips-layout > .gfn-schedule-rail > button { margin-bottom: 10px; }
+    }
+  </style>
+</helmet>
+
+<div style="{{ rootStyle }}">
+
+  <div style="border-bottom: 1px solid var(--color-divider);">
+    <div class="gfn-shell" style="display:flex; align-items:center; justify-content:flex-end; gap:16px; padding-top:8px; padding-bottom:8px; font-size:12px;">
+      <div class="gfn-social" style="display:flex; gap:6px;">
+        <a href="{{ social.youtube }}" target="_blank" rel="noopener" aria-label="YouTube" title="YouTube">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6A3 3 0 0 0 .5 6.2 31 31 0 0 0 0 12a31 31 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.9.6 9.4.6 9.4.6s7.5 0 9.4-.6a3 3 0 0 0 2.1-2.1A31 31 0 0 0 24 12a31 31 0 0 0-.5-5.8ZM9.6 15.5v-7l6.3 3.5-6.3 3.5Z"></path></svg>
+        </a>
+        <a href="{{ social.twitter }}" target="_blank" rel="noopener" aria-label="X" title="X (Twitter)">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M18.9 2H22l-7.6 8.7L23.3 22h-6.9l-5.4-6.6L4.8 22H1.7l8.1-9.3L1 2h7l4.9 6.1L18.9 2Zm-1.2 18h1.9L7.4 4h-2l12.3 16Z"></path></svg>
+        </a>
+        <a href="{{ social.facebook }}" target="_blank" rel="noopener" aria-label="Facebook" title="Facebook">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M22 12a10 10 0 1 0-11.6 9.9v-7H7.9V12h2.5V9.8c0-2.5 1.5-3.9 3.8-3.9 1.1 0 2.2.2 2.2.2v2.4h-1.2c-1.2 0-1.6.8-1.6 1.6V12h2.8l-.4 2.9h-2.4v7A10 10 0 0 0 22 12Z"></path></svg>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <nav class="nav gfn-shell" style="padding-top:16px; padding-bottom:16px;">
+    <div style="display:flex; align-items:center; gap:10px; margin-right:auto; cursor:pointer;" onClick="{{ navigateHome }}">
+      <img src="./assets/gfn-logo.jpg" alt="GFN logo" style="width:38px; height:38px; border-radius:var(--radius-sm); object-fit:cover;">
+      <span class="nav-brand" style="letter-spacing:0.02em;">GFN <span style="color:var(--color-accent);">/</span> Game Day</span>
+    </div>
+    <div class="gfn-nav-links" style="display:flex; align-items:center; gap:28px;">
+      <a href="#media">Watch</a>
+      <a href="#travel">Game-Day Travel</a>
+      <a href="#shop">Shop</a>
+      <a href="#media">Broadcast</a>
+    </div>
+    <div class="gfn-account" style="display:flex; align-items:center; gap:10px; margin-left:16px;">
+      <button class="btn btn-primary" onClick="{{ goToTrips }}">Season Schedule</button>
+    </div>
+  </nav>
+
+  <sc-if value="{{ loadError }}" hint-placeholder-val="{{ false }}">
+    <div class="gfn-shell" style="padding:40px 32px;">
+      <div class="card elev-sm" style="padding:24px;">
+        <span class="card-kicker">Content not loaded</span>
+        <p class="card-body" style="margin-top:8px;">This page reads its content from <code>content/site.json</code>. That file could not be fetched — on a live server it loads automatically; opening this file straight off your desktop will always show this message.</p>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ showHome }}" hint-placeholder-val="{{ true }}">
+
+  <sc-if value="{{ isHeroCinematic }}" hint-placeholder-val="{{ true }}">
+    <header class="gfn-hero" style="position:relative; width:100%; min-height:clamp(300px,34vw,520px); background:#000; border-bottom:1px solid var(--color-divider);">
+      {{ heroImg }}
+      {{ heroMobileImg }}
+      <div class="gfn-hero-overlay" style="position:absolute; inset:0; display:flex; align-items:center;">
+        <div class="gfn-shell" style="width:100%;">
+          <div class="gfn-hero-copy" style="max-width:40%;">
+            <span class="tag tag-outline" style="font-size:clamp(9px,0.7vw,11px);">{{ hero.kicker }}</span>
+            <h1 style="font-size:clamp(20px, 2.9vw, 46px); line-height:1.05; margin:clamp(8px,1.1vw,16px) 0 clamp(8px,1.1vw,18px); text-wrap:pretty;">{{ hero.headlineLead }} <span style="color:var(--color-accent);">{{ hero.headlineAccent }}</span> {{ hero.headlineTail }}</h1>
+            <p style="font-size:clamp(13px, 1.15vw, 18px); opacity:0.85; margin:0 0 clamp(12px, 1.6vw, 24px); text-wrap:pretty;">{{ hero.subhead }}</p>
+            <div style="display:flex; flex-wrap:wrap; gap:clamp(8px, 0.8vw, 12px);">
+              <sc-for list="{{ heroButtons }}" as="b" hint-placeholder-count="3">
+                <a href="{{ b.href }}" class="btn {{ b.variant }}" style="padding:clamp(8px,0.8vw,12px) clamp(14px,1.5vw,22px); font-size:clamp(12px,1vw,15px);">{{ b.label }}</a>
+              </sc-for>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+  </sc-if>
+
+  <sc-if value="{{ isHeroBold }}" hint-placeholder-val="{{ false }}">
+    <header class="gfn-hero" style="position:relative; width:100%; min-height:clamp(300px,34vw,520px); background:#000; border-bottom:3px solid var(--color-accent); box-shadow:0 0 60px var(--gfn-glow);">
+      {{ heroImg }}
+      {{ heroMobileImg }}
+      <div class="gfn-hero-overlay" style="position:absolute; inset:0; display:flex; align-items:center;">
+        <div class="gfn-shell" style="width:100%;">
+          <div class="gfn-hero-copy" style="max-width:40%;">
+            <span class="tag tag-accent" style="font-size:clamp(9px,0.7vw,12px);">{{ hero.kicker }}</span>
+            <h1 style="font-size:clamp(22px, 3.4vw, 56px); line-height:0.98; text-transform:uppercase; letter-spacing:-0.01em; margin:clamp(8px,1.2vw,20px) 0 clamp(8px,1.2vw,20px); text-wrap:pretty;">{{ hero.headlineLead }} <span style="color:var(--color-accent); text-shadow:0 0 40px var(--gfn-glow);">{{ hero.headlineAccent }}</span> {{ hero.headlineTail }}</h1>
+            <p style="font-size:clamp(14px, 1.3vw, 20px); opacity:0.8; margin:0 0 clamp(12px, 1.6vw, 26px); text-wrap:pretty;">{{ hero.subhead }}</p>
+            <div style="display:flex; flex-wrap:wrap; gap:clamp(8px, 0.9vw, 14px);">
+              <sc-for list="{{ heroButtons }}" as="b" hint-placeholder-count="3">
+                <a href="{{ b.href }}" class="btn {{ b.variant }}" style="padding:clamp(9px,0.9vw,14px) clamp(16px,1.7vw,26px); font-size:clamp(12px,1.05vw,16px);">{{ b.label }}</a>
+              </sc-for>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+  </sc-if>
+
+  <section id="travel" class="gfn-shell" style="padding-top:30px; padding-bottom:64px;">
+    <div style="display:flex; align-items:baseline; justify-content:space-between; margin-bottom:24px;">
+      <h2 style="margin:0;">{{ travel.heading }}</h2>
+      <span class="text-muted" style="font-size:13px;">{{ travel.note }}</span>
+    </div>
+    <div class="gfn-hub-grid" style="display:grid; grid-template-columns: repeat(3, 1fr); gap:20px;">
+      <sc-for list="{{ hubCards }}" as="hub" hint-placeholder-count="3">
+        <article class="card gfn-hub-card elev-sm" style="padding:24px; overflow:hidden;">
+          <div style="margin:-24px -24px 16px; height:150px; position:relative; overflow:hidden;">
+            <sc-if value="{{ hub.hasImage }}" hint-placeholder-val="{{ false }}">
+              {{ hub.imgEl }}
+            </sc-if>
+            <sc-if value="{{ hub.noImage }}" hint-placeholder-val="{{ true }}">
+              <div style="position:absolute; inset:0; background:linear-gradient(160deg, var(--color-neutral-800), var(--color-neutral-900) 70%); display:flex; align-items:flex-end; padding:14px;">
+                <span style="width:28px; height:2px; background:var(--color-accent); opacity:0.7;"></span>
+              </div>
+            </sc-if>
+          </div>
+          <span class="card-kicker">{{ hub.kicker }}</span>
+          <h3 class="card-title">{{ hub.title }}</h3>
+          <p class="card-body">{{ hub.body }}</p>
+          <div style="display:flex; flex-direction:column; gap:8px; margin:8px 0;">
+            <sc-for list="{{ hub.tagList }}" as="t" hint-placeholder-count="3">
+              <span class="tag tag-neutral">{{ t.label }}</span>
+            </sc-for>
+          </div>
+          <button class="btn btn-primary btn-block" onClick="{{ hub.plan }}">{{ hub.ctaLabel }}</button>
+        </article>
+      </sc-for>
+    </div>
+  </section>
+
+  <section id="shop" class="gfn-shell" style="padding-bottom:64px;">
+    <div style="display:flex; align-items:baseline; justify-content:space-between; margin-bottom:24px;">
+      <h2 style="margin:0;">{{ shop.heading }}</h2>
+      <span class="text-muted" style="font-size:13px;">{{ shop.note }}</span>
+    </div>
+    <div class="gfn-shop-grid" style="display:grid; grid-template-columns: repeat(4, 1fr); gap:18px;">
+      <sc-for list="{{ shopItems }}" as="item" hint-placeholder-count="4">
+        <div class="card gfn-shop-card elev-sm" style="padding:0; overflow:hidden;">
+          <sc-if value="{{ item.hasImage }}" hint-placeholder-val="{{ false }}">
+            {{ item.imgEl }}
+          </sc-if>
+          <sc-if value="{{ item.noImage }}" hint-placeholder-val="{{ true }}">
+            <div style="aspect-ratio:1; background:linear-gradient(160deg, var(--color-neutral-800), var(--color-neutral-900) 70%); display:flex; align-items:flex-end; padding:14px;"><span style="width:24px; height:2px; background:var(--color-accent); opacity:0.7;"></span></div>
+          </sc-if>
+          <div style="padding:16px;">
+            <h4 class="card-title" style="font-size:15px;">{{ item.title }}</h4>
+            <p class="card-body" style="font-size:12px; margin-top:4px;">{{ item.body }}</p>
+            <sc-if value="{{ item.live }}" hint-placeholder-val="{{ true }}">
+              <a href="{{ item.url }}" target="_blank" rel="noopener" class="btn btn-secondary btn-block" style="margin-top:12px; font-size:13px;">{{ item.ctaLabel }}</a>
+            </sc-if>
+            <sc-if value="{{ item.pending }}" hint-placeholder-val="{{ false }}">
+              <span class="text-muted" style="display:block; margin-top:12px; font-size:12px;">Link coming soon</span>
+            </sc-if>
+          </div>
+        </div>
+      </sc-for>
+    </div>
+  </section>
+
+  <section id="media" class="gfn-shell" style="padding-bottom:64px;">
+    <h2 style="margin:0 0 24px;">{{ media.heading }}</h2>
+    <div style="display:grid; grid-template-columns: 1.6fr 1fr; gap:24px; align-items:stretch;" class="gfn-hero-grid">
+      <div style="background: var(--color-surface); border-radius: var(--radius-lg); aspect-ratio: 16/9; overflow:hidden; box-shadow: var(--shadow-md);">
+        {{ playerEl }}
+      </div>
+      <div class="card elev-sm" style="justify-content:center; padding:28px;">
+        <span class="card-kicker">{{ media.kicker }}</span>
+        <h3 class="card-title" style="margin-top:6px;">{{ media.title }}</h3>
+        <p class="card-body">{{ media.body }}</p>
+        <a href="{{ media.youtubeUrl }}" target="_blank" rel="noopener" class="btn btn-primary btn-block">Subscribe on YouTube</a>
+        <a href="{{ media.facebookUrl }}" target="_blank" rel="noopener" class="btn btn-secondary btn-block">Follow on Facebook</a>
+      </div>
+    </div>
+  </section>
+  </sc-if>
+
+  <sc-if value="{{ isTrips }}" hint-placeholder-val="{{ false }}">
+    <section id="trips" class="gfn-shell" style="padding-top:32px; padding-bottom:80px; min-height:55vh;">
+      <h2 style="margin:0 0 4px;">{{ season.heading }}</h2>
+      <p class="text-muted" style="font-size:13px; margin:0 0 24px;">{{ season.note }}</p>
+
+      <div class="gfn-trips-layout" style="display:grid; grid-template-columns: 260px minmax(0, 1fr); gap:24px; align-items:start;">
+      <div class="gfn-schedule-rail" style="display:flex; flex-direction:column; gap:10px;">
+        <sc-for list="{{ scheduleCards }}" as="game" hint-placeholder-count="6">
+          <button onClick="{{ game.toggle }}" class="card {{ game.cardClass }}" style="order: {{ game.order }}; padding: 12px; text-align: left; cursor: pointer; border: 2px solid {{ game.borderColor }}; opacity: {{ game.cardOpacity }}; display: flex; flex-direction: column; align-items: stretch; gap: 8px; width: 264px; height: 118px">
+            <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:6px;">
+              <span class="tag {{ game.typeTag }}" style="font-size:10px;">{{ game.type }}</span>
+              <sc-if value="{{ game.isNext }}" hint-placeholder-val="{{ false }}">
+                <span class="tag tag-accent" style="font-size:9px;">Next Up</span>
+              </sc-if>
+              <sc-if value="{{ game.tag }}" hint-placeholder-val="{{ false }}">
+                <span class="tag tag-outline" style="font-size:9px;">{{ game.tag }}</span>
+              </sc-if>
+            </div>
+            <div>
+              <div style="font-size:14px; line-height:1.2;">{{ game.matchupShort }}</div>
+              <div class="text-muted" style="font-size:11px; margin-top:2px;">{{ game.date }} · {{ game.time }}</div>
+            </div>
+          </button>
+        </sc-for>
+      </div>
+
+      <div class="gfn-trips-panel" style="order:{{ panelOrder }};">
+        <sc-if value="{{ seasonOver }}" hint-placeholder-val="{{ false }}">
+          <div class="card elev-sm" style="padding:40px 24px; text-align:center;">
+            <p class="text-muted" style="font-size:14px; margin:0;">{{ season.overMessage }}</p>
+          </div>
+        </sc-if>
+        <sc-if value="{{ hasActiveTrip }}" hint-placeholder-val="{{ false }}">
+          <div class="card elev-sm" style="padding:24px; overflow:hidden;">
+            <div style="margin:-24px -24px 20px; height:190px; position:relative; overflow:hidden;">
+              <sc-if value="{{ activeTrip.hasImage }}" hint-placeholder-val="{{ false }}">
+                {{ activeTrip.imgEl }}
+              </sc-if>
+              <sc-if value="{{ activeTrip.noImage }}" hint-placeholder-val="{{ true }}">
+                <div style="position:absolute; inset:0; background:linear-gradient(160deg, var(--color-neutral-800), var(--color-neutral-900) 70%); display:flex; align-items:flex-end; padding:14px;">
+                  <span style="width:28px; height:2px; background:var(--color-accent); opacity:0.7;"></span>
+                </div>
+              </sc-if>
+            </div>
+            <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:12px; margin-bottom:16px;">
+              <div>
+                <span class="card-kicker">{{ activeTrip.hubLabel }}</span>
+                <h3 class="card-title" style="font-size:22px; margin-top:4px;">{{ activeTrip.title }}</h3>
+              </div>
+              <button class="btn btn-ghost" onClick="{{ closeActiveTrip }}">Close</button>
+            </div>
+
+            <sc-if value="{{ activeTrip.overview }}" hint-placeholder-val="{{ true }}">
+            <div style="padding:16px; margin-bottom:8px; border-radius:var(--radius-md); background:var(--color-neutral-900); border:1px solid var(--color-divider);">
+              <span class="card-kicker">Event Overview</span>
+              <p style="font-size:14px; line-height:1.55; margin:8px 0 12px; text-wrap:pretty;">{{ activeTrip.overview }}</p>
+              <div style="display:flex; flex-wrap:wrap; gap:20px;">
+                <div>
+                  <div class="text-muted" style="font-size:11px; text-transform:uppercase; letter-spacing:0.06em;">Venue</div>
+                  <div style="font-size:13px; margin-top:2px;">{{ activeTrip.venue }}</div>
+                </div>
+                <div>
+                  <div class="text-muted" style="font-size:11px; text-transform:uppercase; letter-spacing:0.06em;">Kickoff</div>
+                  <div style="font-size:13px; margin-top:2px;">{{ activeTrip.kickoff }}</div>
+                </div>
+                <div>
+                  <div class="text-muted" style="font-size:11px; text-transform:uppercase; letter-spacing:0.06em;">Getting There</div>
+                  <div style="font-size:13px; margin-top:2px;">{{ activeTrip.gettingThere }}</div>
+                </div>
+              </div>
+            </div>
+            </sc-if>
+
+            <sc-for list="{{ activeTrip.items }}" as="item" hint-placeholder-count="3">
+              <div style="display:flex; align-items:center; justify-content:space-between; gap:16px; padding:14px 0; border-bottom:1px solid var(--color-divider); flex-wrap:wrap;">
+                <div>
+                  <span class="tag tag-neutral">{{ item.typeLabel }}</span>
+                  <div style="margin-top:6px; font-size:15px;">{{ item.label }}</div>
+                  <div class="text-muted" style="font-size:12px; margin-top:2px;">{{ item.date }}</div>
+                </div>
+                <sc-if value="{{ item.live }}" hint-placeholder-val="{{ true }}">
+                  <a href="{{ item.url }}" target="_blank" rel="noopener" class="btn btn-secondary">{{ item.ctaLabel }}</a>
+                </sc-if>
+                <sc-if value="{{ item.pending }}" hint-placeholder-val="{{ false }}">
+                  <span class="tag tag-outline" style="font-size:11px;">Link coming soon</span>
+                </sc-if>
+              </div>
+            </sc-for>
+
+            <p class="text-muted" style="font-size:12px; margin:16px 0 0; padding-top:16px; border-top:1px solid var(--color-divider);">{{ season.disclaimer }}</p>
+
+          </div>
+        </sc-if>
+      </div>
+      </div>
+    </section>
+  </sc-if>
+
+  <footer style="border-top: 1px solid var(--color-divider); padding: 32px 0;">
+    <div class="gfn-shell">
+      <p class="text-muted" style="font-size:12px; max-width:70ch; margin-bottom:20px;">{{ footer.disclosure }}</p>
+      <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px;">
+        <div style="display:flex; align-items:center; gap:10px; cursor:pointer;" onClick="{{ navigateHome }}">
+          <img src="./assets/gfn-logo.jpg" alt="GFN logo" style="width:24px; height:24px; border-radius:var(--radius-sm); object-fit:cover;">
+          <span style="font-size:13px;">© {{ year }} {{ footer.copyright }}</span>
+        </div>
+        <div style="display:flex; gap:20px; font-size:13px;">
+          <a href="#media">Watch</a>
+          <a href="#travel">Travel</a>
+          <a href="#shop">Shop</a>
+          <a href="#media">Broadcast</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{
+  &quot;heroStyle&quot;: {&quot;editor&quot;: &quot;enum&quot;, &quot;default&quot;: &quot;cinematic&quot;, &quot;options&quot;: [&quot;cinematic&quot;, &quot;bold&quot;], &quot;tsType&quot;: &quot;'cinematic'|'bold'&quot;, &quot;section&quot;: &quot;Feel&quot;},
+  &quot;accentTheme&quot;: {&quot;editor&quot;: &quot;enum&quot;, &quot;default&quot;: &quot;gold&quot;, &quot;options&quot;: [&quot;gold&quot;, &quot;crimson&quot;, &quot;chrome&quot;], &quot;tsType&quot;: &quot;string&quot;, &quot;section&quot;: &quot;Feel&quot;},
+  &quot;cardStyle&quot;: {&quot;editor&quot;: &quot;enum&quot;, &quot;default&quot;: &quot;soft&quot;, &quot;options&quot;: [&quot;soft&quot;, &quot;sharp&quot;], &quot;tsType&quot;: &quot;string&quot;, &quot;section&quot;: &quot;Feel&quot;}
+}">
+class Component extends DCLogic {
+  state = { view: 'home', selectedGameId: null, content: null, loadError: false };
+
+  componentDidMount() {
+    fetch('./content/site.json', { cache: 'no-cache' })
+      .then((r) => (r.ok ? r.json() : Promise.reject(new Error('HTTP ' + r.status))))
+      .then((content) => {
+        const next = this.nextGame(content);
+        this.setState({ content, selectedGameId: next ? next.id : null });
+      })
+      .catch(() => this.setState({ loadError: true }));
+  }
+
+  // Media elements are built here rather than in the template: a {{ }} hole in a
+  // src attribute is fetched as literal text at parse time, before renderVals runs.
+  photoEl(o, extraStyle, className) {
+    if (!o || !o.image) return null;
+    return React.createElement('img', {
+      src: o.image,
+      alt: o.alt || '',
+      className: className,
+      style: Object.assign({
+        width: '100%', objectFit: 'cover',
+        objectPosition: o.focus || 'center',
+        transform: 'translate(' + (o.offsetX || 0) + '%, ' + (o.offsetY || 0) + '%) scale(' + (o.zoom || 1) + ')',
+      }, extraStyle || {}),
+    });
+  }
+
+  // Before the fetch lands these paths must exist, or every copy hole logs an
+  // "unresolved" warning on first paint.
+  emptyCopy() {
+    const blank = (keys) => keys.reduce((o, k) => ((o[k] = ''), o), {});
+    return {
+      hero: blank(['kicker', 'headlineLead', 'headlineAccent', 'headlineTail', 'subhead']),
+      travel: blank(['heading', 'note']),
+      shop: blank(['heading', 'note']),
+      media: blank(['heading', 'kicker', 'title', 'body', 'youtubeUrl', 'facebookUrl']),
+      season: blank(['heading', 'note', 'overMessage', 'disclaimer']),
+      footer: blank(['disclosure', 'copyright']),
+      social: { youtube: '#', facebook: '#', twitter: '#' },
+      heroButtons: [], hubCards: [], shopItems: [], scheduleCards: [],
+      panelOrder: 0, seasonOver: false, hasActiveTrip: false, activeTrip: null,
+    };
+  }
+
+  playerEl(url) {
+    if (!url) return null;
+    return React.createElement('iframe', {
+      src: url,
+      title: 'Latest GFN episode',
+      allow: 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture',
+      allowFullScreen: true,
+      style: { width: '100%', height: '100%', border: 0, display: 'block' },
+    });
+  }
+
+  isLive(url) {
+    return !!url && url !== '#' && !url.startsWith('#');
+  }
+
+  gameDate(g, year) {
+    const d = new Date(g.date + ' ' + year + ' 23:59');
+    return isNaN(d) ? null : d;
+  }
+
+  visibleGames(content) {
+    return (content.schedule || []).filter((g) => g.show !== false);
+  }
+
+  // The next game still to be played — what the schedule view opens on.
+  nextGame(content) {
+    const now = new Date();
+    const year = content.seasonYear || new Date().getFullYear();
+    return this.visibleGames(content)
+      .map((g) => ({ g, d: this.gameDate(g, year) }))
+      .filter((x) => x.d && x.d >= now)
+      .sort((a, b) => a.d - b.d)
+      .map((x) => x.g)[0] || null;
+  }
+
+  pickGame = (gameId) => {
+    this.setState((s) => ({ selectedGameId: s.selectedGameId === gameId ? null : gameId }));
+  };
+  closeActiveTrip = () => this.setState({ selectedGameId: null });
+  goToTrips = () => this.setState({ view: 'trips' });
+  navigateHome = () => this.setState({ view: 'home' });
+  planGame = (gameId) => this.setState({ view: 'trips', selectedGameId: gameId });
+
+  ACCENT_THEMES = {
+    gold: { accent: '#ffcc00', accent2: '#ffdd55', glow: 'rgba(255,204,0,0.35)' },
+    crimson: { accent: '#e8384f', accent2: '#ff7a86', glow: 'rgba(232,56,79,0.35)' },
+    chrome: { accent: '#e2e2e2', accent2: '#ffffff', glow: 'rgba(226,226,226,0.28)' },
+  };
+  CARD_STYLES = {
+    soft: { radiusLg: '20px', radiusMd: '14px', radiusSm: '8px' },
+    sharp: { radiusLg: '4px', radiusMd: '3px', radiusSm: '2px' },
+  };
+
+  renderVals() {
+    const { view, selectedGameId, content, loadError } = this.state;
+    const accentTheme = this.props.accentTheme ?? 'gold';
+    const cardStyleKey = this.props.cardStyle ?? 'soft';
+    const heroStyle = this.props.heroStyle ?? 'cinematic';
+    const accent = this.ACCENT_THEMES[accentTheme] || this.ACCENT_THEMES.gold;
+    const radii = this.CARD_STYLES[cardStyleKey] || this.CARD_STYLES.soft;
+    const rootStyle = {
+      background: 'var(--color-bg)', color: 'var(--color-text)', minHeight: '100vh',
+      '--color-accent': accent.accent, '--color-accent-2': accent.accent2, '--gfn-glow': accent.glow,
+      '--radius-lg': radii.radiusLg, '--radius-md': radii.radiusMd, '--radius-sm': radii.radiusSm,
+    };
+
+    const base = {
+      ...this.emptyCopy(),
+      rootStyle, loadError,
+      isHeroCinematic: heroStyle === 'cinematic', isHeroBold: heroStyle === 'bold',
+      showHome: view === 'home', isTrips: view === 'trips',
+      year: new Date().getFullYear(),
+      goToTrips: this.goToTrips, navigateHome: this.navigateHome, closeActiveTrip: this.closeActiveTrip,
+      heroImg: null, heroMobileImg: null, playerEl: null,
+    };
+    if (!content) return base;
+
+    const year = content.seasonYear || new Date().getFullYear();
+    const links = content.defaultLinks || {};
+    const games = this.visibleGames(content);
+    const next = this.nextGame(content);
+    const now = new Date();
+
+    const scheduleCards = games.map((g, i) => {
+      const isOpen = selectedGameId === g.id;
+      const gd = this.gameDate(g, year);
+      return {
+        ...g,
+        matchupShort: (g.matchup || '').replace('University', '').trim(),
+        cardClass: isOpen ? 'elev-md' : 'elev-sm',
+        borderColor: isOpen ? 'var(--color-accent)' : 'var(--color-divider)',
+        typeTag: g.type === 'Postseason' ? 'tag-accent' : g.type === 'Home' ? 'tag-neutral' : g.type === 'Away' ? 'tag-outline' : 'tag-accent-2',
+        cardOpacity: gd && gd < now && !isOpen ? 0.45 : 1,
+        order: i * 2,
+        isNext: !!(next && next.id === g.id),
+        toggle: () => this.pickGame(g.id),
+      };
+    });
+    const openIndex = scheduleCards.findIndex((c) => c.id === selectedGameId);
+    const panelOrder = openIndex < 0 ? scheduleCards.length * 2 : openIndex * 2 + 1;
+
+    const g = openIndex < 0 ? null : games[openIndex];
+    const activeTrip = g ? {
+      title: (g.matchup || '').replace(/^(vs|at) /, '') + ' Trip',
+      hubLabel: g.date + ' · ' + g.location,
+      overview: g.overview, venue: g.venue, gettingThere: g.gettingThere,
+      kickoff: g.date + ' · ' + g.time,
+      image: g.image || '', hasImage: !!g.image, noImage: !g.image,
+      focus: g.focus || 'center', zoom: g.zoom || 1, offsetX: g.offsetX || 0, offsetY: g.offsetY || 0,
+      imgEl: this.photoEl({ ...g, alt: g.matchup || '' }, { height: '100%', display: 'block' }),
+      slotId: 'trip-' + g.id, slotLabel: (g.city || 'City') + ' photo',
+      items: [
+        { typeLabel: 'Tickets', ctaLabel: 'Find Tickets', label: 'Game Ticket — ' + g.matchup, date: g.date + ' · ' + g.time, url: g.ticketUrl || links.ticketUrl || '' },
+        { typeLabel: 'Hotel, Flight, Rental Car', ctaLabel: 'Book on Expedia', label: 'Stays, flights and cars near ' + (g.city || g.location), date: g.date + ' weekend', url: g.travelUrl || links.travelUrl || '' },
+        { typeLabel: 'Get Gear', ctaLabel: 'Shop Gear', label: 'Game-day gear collection', date: 'Curated by GFN', url: g.gearUrl || links.gearUrl || '' },
+      ].map((it) => ({ ...it, live: this.isLive(it.url), pending: !this.isLive(it.url) })),
+    } : null;
+
+    const hubCards = (content.hubCards || []).map((c, i) => ({
+      ...c,
+      hasImage: !!c.image, noImage: !c.image,
+      focus: c.focus || 'center', zoom: c.zoom || 1, offsetX: c.offsetX || 0, offsetY: c.offsetY || 0,
+      imgEl: this.photoEl({ ...c, alt: c.title || '' }, { height: '100%', display: 'block' }),
+      slotId: c.slotId || 'hub-' + i,
+      slotLabel: c.slotLabel || 'Photo',
+      tagList: (c.tags || []).map((label, j) => ({ label, key: j })),
+      plan: () => this.planGame(c.gameId),
+    }));
+
+    const shopItems = ((content.shop && content.shop.items) || []).map((it) => ({
+      ...it, hasImage: !!it.image, noImage: !it.image, url: it.url || '',
+      live: this.isLive(it.url), pending: !this.isLive(it.url),
+      focus: it.focus || 'center', zoom: it.zoom || 1, offsetX: it.offsetX || 0, offsetY: it.offsetY || 0,
+      imgEl: this.photoEl({ ...it, alt: it.title || '' }, { aspectRatio: '1', display: 'block' }),
+    }));
+
+    const heroButtons = ((content.hero && content.hero.buttons) || []).map((b, i) => ({
+      ...b, variant: i === 0 ? 'btn-primary' : 'btn-secondary',
+    }));
+
+    const m = content.media || {};
+    const h = content.hero || {};
+    return {
+      ...base,
+      hero: content.hero || {}, heroButtons,
+      heroReady: !!(content.hero && content.hero.masthead),
+      heroMobileReady: !!(content.hero && content.hero.mastheadMobile),
+      heroImg: this.photoEl({ image: h.masthead, alt: 'GFN Game Day' }, { height: 'auto' }, 'gfn-masthead'),
+      heroMobileImg: this.photoEl({ image: h.mastheadMobile, alt: 'GFN Game Day' }, { height: 'auto' }, 'gfn-masthead-mobile'),
+      playerEl: this.playerEl(m.embedUrl),
+      travel: content.travel || {}, hubCards,
+      shop: content.shop || {}, shopItems,
+      media: m,
+      social: { youtube: m.youtubeUrl || '#', facebook: m.facebookUrl || '#', twitter: m.twitterUrl || '#' },
+      season: content.season || {}, footer: content.footer || {},
+      scheduleCards, panelOrder, seasonOver: !next,
+      hasActiveTrip: !!activeTrip, activeTrip,
+    };
+  }
+}
+
+</script>
+</body>
+</html>
