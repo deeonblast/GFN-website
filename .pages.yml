@@ -1,0 +1,146 @@
+media:
+  input: assets/uploads
+  output: ./assets/uploads
+  categories: [image]
+
+content:
+  - name: site
+    label: GFN Game Day
+    path: content/site.json
+    type: file
+    fields:
+      - name: seasonYear
+        label: Season year
+        type: number
+        description: Used to work out which game is "Next Up". Change this when you roll over to a new season.
+
+      - name: hero
+        label: Hero (top of page)
+        type: object
+        fields:
+          - { name: kicker, label: Small tag above the headline, type: string }
+          - { name: headlineLead, label: Headline — first words, type: string }
+          - { name: headlineAccent, label: Headline — highlighted words, type: string, description: These words appear in the accent color. }
+          - { name: headlineTail, label: Headline — last words, type: string }
+          - { name: subhead, label: Paragraph under the headline, type: text }
+          - { name: masthead, label: Masthead image — wide (desktop), type: image, description: "Roughly 2400 x 900, faded to black on the left so the text reads." }
+          - { name: mastheadMobile, label: Masthead image — square (phones), type: image }
+          - name: buttons
+            label: Hero buttons
+            type: object
+            list: { max: 3 }
+            fields:
+              - { name: label, label: Button text, type: string }
+              - { name: href, label: Link, type: string, description: "Use #travel or #shop to jump down the page, or a full https:// link." }
+
+      - name: travel
+        label: Travel guides section
+        type: object
+        fields:
+          - { name: heading, label: Section heading, type: string }
+          - { name: note, label: Small note on the right, type: string, required: false }
+
+      - name: hubCards
+        label: Travel guide cards
+        type: object
+        list: true
+        fields:
+          - { name: title, label: Card title, type: string }
+          - { name: kicker, label: Small label above the title, type: string }
+          - { name: body, label: Card text, type: text }
+          - { name: ctaLabel, label: Button text, type: string }
+          - { name: gameId, label: Opens which game?, type: string, description: "The ID of a game in the season schedule below, e.g. g4." }
+          - { name: image, label: Card photo, type: image, required: false, description: Roughly 1200 x 600. }
+          - { name: tags, label: Partner lines, type: string, list: true, required: false, description: "One short line each, e.g. Hotels · Marriott / Hilton" }
+          - { name: focus, label: Photo framing, type: select, default: center, options: { values: [center, top, bottom, left, right, "top left", "top right", "bottom left", "bottom right"] }, description: "Which part of the photo to keep when it gets cropped to fit the frame." }
+          - { name: zoom, label: Photo zoom, type: number, default: 1, description: "1 = fit the frame. 1.3 = zoom in 30%. Use with framing to crop in on a subject." }
+          - { name: offsetX, label: Nudge left / right (%), type: number, default: 0, description: "From the framing tool at /frame.html. Negative moves the photo left." }
+          - { name: offsetY, label: Nudge up / down (%), type: number, default: 0, description: "From the framing tool at /frame.html. Negative moves the photo up." }
+          - { name: slotId, label: Placeholder id, type: string, required: false, description: Leave alone. }
+          - { name: slotLabel, label: Placeholder text, type: string, required: false, description: Leave alone. }
+
+      - name: schedule
+        label: Season schedule
+        type: object
+        list: true
+        fields:
+          - { name: id, label: ID, type: string, description: "Short and unique, e.g. g1. Travel cards point at these." }
+          - { name: date, label: Date, type: string, description: "Must look like 'Sep 26' — month abbreviation then day. This is how the site knows which game is next." }
+          - { name: time, label: Kickoff, type: string, description: "e.g. 6:00 PM CT, or TBD." }
+          - { name: matchup, label: Matchup, type: string, description: "Start with 'vs' for home/neutral or 'at' for away." }
+          - { name: type, label: Type, type: select, options: { values: [Home, Away, Neutral, Postseason] } }
+          - { name: city, label: City, type: string, description: Just the city — used in the hotel link text. }
+          - { name: location, label: Full location line, type: string }
+          - { name: tag, label: Badge, type: string, required: false, description: "e.g. Homecoming, Bayou Classic. Leave blank for none." }
+          - { name: venue, label: Venue + capacity, type: string, required: false }
+          - { name: gettingThere, label: Getting there, type: string, required: false }
+          - { name: overview, label: Event overview, type: text, required: false, description: The festival vibe, what the weekend is like, travel advice. }
+          - { name: image, label: City photo, type: image, required: false, description: Roughly 2400 x 920. }
+          - { name: focus, label: Photo framing, type: select, default: center, options: { values: [center, top, bottom, left, right, "top left", "top right", "bottom left", "bottom right"] }, description: "Which part of the photo to keep when it gets cropped to fit the frame." }
+          - { name: zoom, label: Photo zoom, type: number, default: 1, description: "1 = fit the frame. 1.3 = zoom in 30%. Use with framing to crop in on a subject." }
+          - { name: offsetX, label: Nudge left / right (%), type: number, default: 0, description: "From the framing tool at /frame.html. Negative moves the photo left." }
+          - { name: offsetY, label: Nudge up / down (%), type: number, default: 0, description: "From the framing tool at /frame.html. Negative moves the photo up." }
+          - { name: ticketUrl, label: Tickets link, type: string, required: false, description: Leave blank to fall back to the default link. }
+          - { name: travelUrl, label: Hotel / travel link, type: string, required: false }
+          - { name: gearUrl, label: Gear link, type: string, required: false }
+          - { name: show, label: Show on the site, type: boolean, default: true, description: Turn off to hide a game, e.g. an unconfirmed postseason game. }
+
+      - name: season
+        label: Season panel text
+        type: object
+        fields:
+          - { name: heading, label: Heading, type: string }
+          - { name: note, label: Line under the heading, type: string }
+          - { name: overMessage, label: Message once the season is over, type: text }
+          - { name: disclaimer, label: Affiliate note at the bottom of a plan, type: text }
+
+      - name: defaultLinks
+        label: Default affiliate links
+        type: object
+        description: Used for any game that does not have its own link filled in.
+        fields:
+          - { name: ticketUrl, label: Tickets, type: string, required: false }
+          - { name: travelUrl, label: Hotels / travel, type: string, required: false }
+          - { name: gearUrl, label: Gear, type: string, required: false }
+
+      - name: shop
+        label: Fan shop
+        type: object
+        fields:
+          - { name: heading, label: Section heading, type: string }
+          - { name: note, label: Small note on the right, type: string, required: false }
+          - name: items
+            label: Shop cards
+            type: object
+            list: true
+            fields:
+              - { name: title, label: Title, type: string }
+              - { name: body, label: Description, type: string }
+              - { name: url, label: Link, type: string }
+              - { name: ctaLabel, label: Button text, type: string }
+              - { name: image, label: Product photo, type: image, required: false, description: Square. }
+              - { name: focus, label: Photo framing, type: select, default: center, options: { values: [center, top, bottom, left, right, "top left", "top right", "bottom left", "bottom right"] }, description: "Which part of the photo to keep when it gets cropped to fit the frame." }
+              - { name: zoom, label: Photo zoom, type: number, default: 1, description: "1 = fit the frame. 1.3 = zoom in 30%. Use with framing to crop in on a subject." }
+              - { name: offsetX, label: Nudge left / right (%), type: number, default: 0, description: "From the framing tool at /frame.html. Negative moves the photo left." }
+              - { name: offsetY, label: Nudge up / down (%), type: number, default: 0, description: "From the framing tool at /frame.html. Negative moves the photo up." }
+              - { name: placeholder, label: Placeholder text, type: string, required: false, description: Leave alone. }
+
+      - name: media
+        label: Broadcast & social
+        type: object
+        fields:
+          - { name: heading, label: Section heading, type: string }
+          - { name: embedUrl, label: YouTube embed URL, type: string, description: "Must be a youtube.com/embed/... URL." }
+          - { name: kicker, label: Side card — small label, type: string }
+          - { name: title, label: Side card — title, type: string }
+          - { name: body, label: Side card — text, type: text }
+          - { name: youtubeUrl, label: YouTube channel, type: string }
+          - { name: facebookUrl, label: Facebook page, type: string }
+          - { name: twitterUrl, label: X / Twitter, type: string, required: false }
+
+      - name: footer
+        label: Footer
+        type: object
+        fields:
+          - { name: disclosure, label: Affiliate disclosure, type: text }
+          - { name: copyright, label: Copyright line, type: string, description: The year is added automatically. }
